@@ -4,7 +4,7 @@ class unique_ptr{
     T* data;
     public:
     constexpr unique_ptr() noexcept : data{nullptr} {}
-    constexpr unique_ptr(nullptr) noexcept : data{nullptr} {}
+    //constexpr unique_ptr(nullptr) noexcept : data{nullptr} {}
     explicit unique_ptr(T* ptr) noexcept : data{ptr} {}
     ~unique_ptr() noexcept {delete data;}
 
@@ -18,7 +18,13 @@ class unique_ptr{
         reset(pv.release());
         return *this;
     }
-    T* get() noexcept const { return data;}
+    /*
+    unique_ptr& operator=(nullptr) noexcept {
+        reset();
+        return *this;
+    }
+    */
+    T* get() const noexcept { return data;}
     T* release() noexcept {
         T* tmp = get();
         data = nullptr;
@@ -29,6 +35,9 @@ class unique_ptr{
         if(pv != nullptr)
             delete pv;
     }
+    T operator*() const {return *get();}
+    T* operator->() const noexcept { return get();}
+    explicit operator bool() const noexcept {return get() == nullptr ? false : true ;}
 
 };
 template<typename U, typename ... types>
